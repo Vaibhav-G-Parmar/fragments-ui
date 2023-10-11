@@ -19,7 +19,7 @@ export async function getUserFragments(user) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
     const data = await res.json();
-   // console.log('Got user fragments data', { data });
+    //console.log('Got user fragments data', data );
     return data
   } catch (err) {
     console.error('Unable to call GET /v1/fragment', { err });
@@ -37,9 +37,10 @@ export async function getUserFragmentsWithId(id, user) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
     const data = await res.json();
-    console.log('Got user fragments data', { data });
+    console.log('Got user fragment with Id', { data });
+    return data
   } catch (err) {
-    console.error('Unable to call GET /v1/fragment', { err });
+    console.error(`Unable to call GET /v1/fragment/${id}`, { err });
   }
 }
 

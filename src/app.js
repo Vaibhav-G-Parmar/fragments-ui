@@ -1,7 +1,7 @@
 // src/app.js
 
 import { Auth, getUser } from './auth';
-import { getUserFragments, postUserFragments } from './api';
+import { getUserFragments, getUserFragmentsWithId, postUserFragments } from './api';
 
 async function init() {
   // Get our UI elements
@@ -14,6 +14,7 @@ async function init() {
   const allFragments = document.querySelector('#allFragments');
   const idInput = document.querySelector('#idInput');
   const getFragment = document.querySelector('#getFragment');
+  const fragmentWithId = document.querySelector('#fragmentWithId');
  
   // Wire up event handlers to deal with login and logout.
   loginBtn.onclick = () => {
@@ -30,12 +31,19 @@ async function init() {
     console.log(postInput.value)
     postUserFragments(postInput.value, user);
   }
-  getAllFragments.onclick = () => {
+  getAllFragments.onclick = async () => {
     console.log(postInput.value)
-    var data = getUserFragments(user)
+    var data = await getUserFragments(user)
     console.log('data: ' , data) 
-    //allFragments.innerHTML = data
+    allFragments.innerHTML = data.fragments
   }
+  getFragment.onclick = async () => {
+    console.log(idInput.value)
+    var data = await getUserFragmentsWithId(idInput.value, user)
+    console.log('data with Id: ' , data) 
+    fragmentWithId.innerHTML = data
+  }
+
   // See if we're signed in (i.e., we'll have a `user` object)
   const user = await getUser();
 
