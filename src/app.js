@@ -15,6 +15,7 @@ async function init() {
   const idInput = document.querySelector('#idInput');
   const getFragment = document.querySelector('#getFragment');
   const fragmentWithId = document.querySelector('#fragmentWithId');
+  const inputIdToShow = document.querySelector('#inputIdToShow');
  
   // Wire up event handlers to deal with login and logout.
   loginBtn.onclick = () => {
@@ -41,7 +42,7 @@ async function init() {
     console.log(idInput.value)
     var data = await getUserFragmentsWithId(idInput.value, user)
     console.log('data with Id: ' , data) 
-    fragmentWithId.innerHTML = data
+    fragmentWithId.innerHTML = data 
   }
 
   // See if we're signed in (i.e., we'll have a `user` object)

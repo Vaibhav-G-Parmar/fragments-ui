@@ -36,11 +36,13 @@ export async function getUserFragmentsWithId(id, user) {
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
-    const data = await res.json();
+    //const data = await res.json();
+    const data = await res.text();
     console.log('Got user fragment with Id', { data });
+    console.log('Got user fragment with Id data.');
     return data
   } catch (err) {
-    console.error(`Unable to call GET /v1/fragment/${id}`, { err });
+    console.error(`Unable to call GET /v1/fragment/${id}`, err);
   }
 }
 
