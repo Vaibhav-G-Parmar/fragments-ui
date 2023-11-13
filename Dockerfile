@@ -37,7 +37,7 @@ COPY --from=dependencies /app /app
 COPY . .
 
 # Build the app, creating /build    
-RUN npm install parcel-bundler@2.10.0 \ 
+RUN npm install parcel-bundler@1.12.5 \ 
 && npm run build
 
 ##################################################################################################
