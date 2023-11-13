@@ -15,7 +15,7 @@ async function init() {
   const idInput = document.querySelector('#idInput');
   const getFragment = document.querySelector('#getFragment');
   const fragmentWithId = document.querySelector('#fragmentWithId');
-  const inputIdToShow = document.querySelector('#inputIdToShow');
+  const fragmentType = document.querySelector("#type");
  
   // Wire up event handlers to deal with login and logout.
   loginBtn.onclick = () => {
@@ -30,13 +30,22 @@ async function init() {
   };
   postBtn.onclick = () => {
     console.log(postInput.value)
-    postUserFragments(postInput.value, user);
+    //console.log(fragmentType.options[fragmentType.selectedIndex].value)
+    if(fragmentType.options[fragmentType.selectedIndex].value == "text/plain" ||
+    fragmentType.options[fragmentType.selectedIndex].value == "text/markdown" ||
+    fragmentType.options[fragmentType.selectedIndex].value == "text/html" ||
+    fragmentType.options[fragmentType.selectedIndex].value == "application/json") {
+      postUserFragments(user, postInput.value, fragmentType.options[fragmentType.selectedIndex].value);
+    }
   }
   getAllFragments.onclick = async () => {
     console.log(postInput.value)
     var data = await getUserFragments(user)
     console.log('data: ' , data) 
-    allFragments.innerHTML = data.fragments
+    // Map each ID to include a number in front and add a newline in between
+    const formattedIds = data.fragments.map((id, index) => `${index + 1}. ${id}`).join('<br>');
+    allFragments.innerHTML = formattedIds 
+    console.log('formatted ids:', formattedIds)
   }
   getFragment.onclick = async () => {
     console.log(idInput.value)

@@ -27,32 +27,40 @@ export async function getUserFragments(user) {
 }
 
 export async function getUserFragmentsWithId(id, user) {
-  console.log('Requesting user fragments data...');
+  console.log('Requesting user fragments data with id...');
   try {
     const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
       // Generate headers with the proper Authorization bearer token to pass
-      headers: user.authorizationHeaders('text/plain'),
+      //headers: user.authorizationHeaders('text/plain'),
+      headers: {
+        Authorization: `Bearer ${user.idToken}`,
+      },
     });
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
     //const data = await res.json();
     const data = await res.text();
-    console.log('Got user fragment with Id', { data });
-    console.log('Got user fragment with Id data.');
+    const type = await res.getUserFragmentMetadataWithId
+    console.log('Got user fragment with Id', { data }, 'and Content-Type', {type});
+    console.log("Got user fragment and it's type with Id data.");
     return data
   } catch (err) {
     console.error(`Unable to call GET /v1/fragment/${id}`, err);
   }
 }
 
-export async function postUserFragments(postInput, user) {
-  console.log('Posting user fragments data...', postInput)
+export async function postUserFragments(user, postInput, fType) {
+  console.log('Posting user fragments data...', postInput, 'with type', fType)
   try {
     const res = await fetch(`${apiUrl}/v1/fragments`, {
       method: "POST",
       // Generate headers with the proper Authorization bearer token to pass
-      headers: user.authorizationHeaders('text/plain'),
+      headers: {
+        //user.authorizationHeaders('text/plain')
+        'Authorization': `Bearer ${user.idToken}`,
+        'Content-Type': fType
+      },
       body: postInput
     });
     if (!res.ok) {
@@ -60,8 +68,32 @@ export async function postUserFragments(postInput, user) {
     }
     const data = await res.json();
     console.log('Got user fragments data', data )
+    //console.log('Got authorization header', authorizationHeaders.Authorization )
     //await getUserFragmentsWithId(data.fragment.id, user)
   } catch (err) {
-    console.error('Unable to call GET /v1/fragment', { err })
+    console.error('Unable to POST GET /v1/fragment', { err })
+  }
+}
+
+export async function getUserFragmentMetadataWithId(id, user) {
+  console.log('Requesting user fragments metadata...');
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}/info`, {
+      // Generate headers with the proper Authorization bearer token to pass
+      //headers: user.authorizationHeaders('text/plain'),
+      headers: {
+        Authorization: `Bearer ${user.idToken}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    //const data = await res.json();
+    const data = await res.text();
+    console.log('Got user fragment metadata:', { data });
+    console.log('Got user fragment metadata with Id data.');
+    return data
+  } catch (err) {
+    console.error(`Unable to call GET /v1/fragment/${id}/info`, err);
   }
 }

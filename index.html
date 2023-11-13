@@ -14,7 +14,15 @@
     <section hidden id="user">
       <h2>Hello <span class="username"></span>!</h2>
 
-      <h4>Post a Fragment Data (type supported: text/plain)</h4>
+      <h4>Select the type of the Fragment:</h4>
+      <select name="type" id="type">
+        <option value="text/plain">text/plain</option>
+        <option value="text/html">text/html</option>
+        <option value="text/markdown">text/markdown</option>
+        <option value="application/json">application/json</option>
+      </select>
+
+      <h4>Post the Fragment Data Here:</h4>
       <input type="text" id="postInput">
       <br><br>
       <button id="post">Post</button>
@@ -35,8 +43,16 @@
       <br>
       <br>
       <div id="fragmentWithId"></div>
+
+      <h4>Get Fragment Metadata with ID</h4>
+      <input type="text" id="idInput">
       <br>
-      <div id="inputIdToShow"></div>
+      <br>
+      <button id="getFragmentMetadata">Get Fragment Metadata</button>
+      <br>
+      <br>
+      <div id="fragmentMetadataWithId"></div>
+
       <br>
       <br>
     </section>
