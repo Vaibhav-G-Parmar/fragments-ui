@@ -127,11 +127,12 @@ export async function updateFragment(user, id, type, content) {
   try {
     console.log(type);
     console.log(content);
+    console.log(id);
     const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${user.idToken}`,
-        "Content-Type": `${type}`,
+        //"Content-Type": `${type}`,
       },
       body: `${content}`,
     });
@@ -148,6 +149,27 @@ export async function updateFragment(user, id, type, content) {
 
 /** Delete fragment function **/
 export async function deleteFragment(user, id) {
+  console.log('Deleting user fragments data...');
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
+      method: "DELETE",
+      // Generate headers with the proper Authorization bearer token to pass
+      headers: {
+        'Authorization': `Bearer ${user.idToken}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    return data
+  } catch (err) {
+    console.error('Unable to call DELETE /v1/fragment', { err });
+  }
+}
+
+/** Convert fragment function **/
+export async function convertFragment(user, id, data, type) {
   console.log('Deleting user fragments data...');
   try {
     const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {

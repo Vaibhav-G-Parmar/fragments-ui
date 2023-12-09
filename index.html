@@ -52,15 +52,13 @@
       <div id="allFragments"></div>
 
       <!--	GET /fragments/?expand=1 route - gets id with metadata-->
-      <!--need to implement-->
       <h4>Get All Fragments' ID with Metadata:</h4>
       <button id="getAllFragmentsIdWithMetadataBtn">Get</button>
       <br>
       <br>
       <div id="allFragmentsIdWithMetadata"></div>
 
-      <!-- 	GET /fragments/:id returns an existing fragment. - missing Type and Length -->
-      <!--missing type and length -->
+      <!-- 	GET /fragments/:id returns an existing fragment. -->
       <h4>Get Fragment with ID:</h4>
       <input type="text" id="idInput">
       <br>
@@ -77,6 +75,12 @@
       <div id="fragmentWithIdInfoDiv">
 
       </div>
+    
+      <!--################################## Post Fragments Here: ##################################-->
+      <h2><u><i>Convert your Fragment here:</i></u></h2>
+      <h4>Enter Fragment ID:</h4>
+      <input type="text" id="convertIdInput">
+      <br>
       <br>
       <!-- 	GET /fragments/:id.ext returns an existing fragment's data converted to a supported type -->
       <button id="getFragmentConvertedBtn">Get Fragment Converted</button>
