@@ -1,7 +1,7 @@
 // src/app.js
 
 import { Auth, getUser } from './auth';
-import { getUserFragments, getUserFragmentsWithId, getUserFragmentsMetadata, postUserFragments, updateFragment, deleteFragment } from './api';
+import { getUserFragments, getUserFragmentsWithId, getUserFragmentsMetadata, getUserFragmentMetadataWithId, postUserFragments, updateFragment, deleteFragment } from './api';
 
 async function init() {
   // Get our UI elements
@@ -16,6 +16,8 @@ async function init() {
   const allFragmentsIdWithMetadata = document.querySelector('#allFragmentsIdWithMetadata');
   const idInput = document.querySelector('#idInput');
   const getFragment = document.querySelector('#getFragmentBtn');
+  const getFragmentIDInfoBtn = document.querySelector('#getFragmentIDInfoBtn');
+  const fragmentWithIdInfoDiv = document.querySelector('#fragmentWithIdInfoDiv');
   const fragmentWithId = document.querySelector('#fragmentWithId');
   const fragmentType = document.querySelector("#selectionType");
   const fileInput = document.querySelector("#file");
@@ -125,6 +127,28 @@ async function init() {
     }
     fragmentWithId.innerHTML = "<b>Content:</b> " + data + "<br><b>Length:</b> " + data.length + "<br><b>Type:</b> "; 
   }
+
+  //get id with info API
+  getFragmentIDInfoBtn.onclick = async () => {
+    console.log(idInput.value)
+    var data = await getUserFragmentMetadataWithId(idInput.value, user)
+    if(data == undefined) {
+      data = "<i><strong>Error! Fragment with the given ID does not exist!</strong></i>"
+    } else {
+      console.log('data with Id info: ' , data) 
+      var fragment = JSON.parse(data).fragment;
+  
+      var infoString = `<b><i>ID:</i></b> ${fragment.id}<br>`;
+      infoString += `<b><i>OwnerId:</i></b> ${fragment.ownerId}<br>`;
+      infoString += `<b><i>Created:</i></b> ${fragment.created}<br>`;
+      infoString += `<b><i>Updated:</i></b> ${fragment.updated}<br>`;
+      infoString += `<b><i>Type:</i></b> ${fragment.type}<br>`;
+      infoString += `<b><i>Size:</i></b> ${fragment.size}<br>`;
+    
+      document.getElementById('fragmentWithIdInfoDiv').innerHTML = infoString;
+    }
+  }
+
 
   // See if we're signed in (i.e., we'll have a `user` object)
   const user = await getUser();
