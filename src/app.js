@@ -1,7 +1,7 @@
 // src/app.js
 
 import { Auth, getUser } from './auth';
-import { getUserFragments, getUserFragmentsWithId, postUserFragments } from './api';
+import { getUserFragments, getUserFragmentsWithId, getUserFragmentsMetadata, postUserFragments, updateFragment, deleteFragment } from './api';
 
 async function init() {
   // Get our UI elements
@@ -12,11 +12,36 @@ async function init() {
   const postInput = document.querySelector('#postInput');
   const getAllFragments = document.querySelector('#getAllFragments');
   const allFragments = document.querySelector('#allFragments');
+  const getAllFragmentsIdWithMetadataBtn = document.querySelector('#getAllFragmentsIdWithMetadataBtn');
+  const allFragmentsIdWithMetadata = document.querySelector('#allFragmentsIdWithMetadata');
   const idInput = document.querySelector('#idInput');
-  const getFragment = document.querySelector('#getFragment');
+  const getFragment = document.querySelector('#getFragmentBtn');
   const fragmentWithId = document.querySelector('#fragmentWithId');
-  const fragmentType = document.querySelector("#type");
+  const fragmentType = document.querySelector("#selectionType");
+  const fileInput = document.querySelector("#file");
+  const updateInputID = document.querySelector("#updateInputID");
+  const updateInputData = document.querySelector("#updateInputData");
+  const updateFragmentBtn = document.querySelector("#updateFragmentBtn");
+  const deleteInputID = document.querySelector("#deleteInputID");
+  const deleteFragmentBtn = document.querySelector("#deleteFragmentBtn");
  
+ // Dynamically create and append the style element for table styling
+ const styleElement = document.createElement('style');
+ styleElement.innerHTML = `
+   table {
+     border-collapse: collapse;
+     width: 100%; 
+     margin-right: 20px; 
+   }
+   th, td {
+     border: 1px solid #dddddd;
+     text-align: center;
+     padding: 8px;
+   }`;
+
+ document.head.appendChild(styleElement);
+
+
   // Wire up event handlers to deal with login and logout.
   loginBtn.onclick = () => {
     // Sign-in via the Amazon Cognito Hosted UI (requires redirects), see:
@@ -28,16 +53,40 @@ async function init() {
     // https://docs.amplify.aws/lib/auth/emailpassword/q/platform/js/#sign-out
     Auth.signOut();
   };
-  postBtn.onclick = () => {
+
+  postBtn.onclick = async () => {
     console.log(postInput.value)
-    //console.log(fragmentType.options[fragmentType.selectedIndex].value)
-    if(fragmentType.options[fragmentType.selectedIndex].value == "text/plain" ||
-    fragmentType.options[fragmentType.selectedIndex].value == "text/markdown" ||
-    fragmentType.options[fragmentType.selectedIndex].value == "text/html" ||
-    fragmentType.options[fragmentType.selectedIndex].value == "application/json") {
-      postUserFragments(user, postInput.value, fragmentType.options[fragmentType.selectedIndex].value);
+    
+    if(postInput.value === ""){
+      const uploadedFile = fileInput.files[0]
+      const reader = new FileReader()
+      if(fragmentType.options[fragmentType.selectedIndex].value.startsWith("image")) {
+        reader.onload = function (e) { 
+          const imageContent = e.target.result   //storing the contents of the file into imageContent
+        }
+        await postUserFragments(user, fragmentType.options[fragmentType.selectedIndex].value, reader.readAsDataURL(uploadedFile))
+      }
+      else{
+        //reading the file as text
+        reader.readAsText(uploadedFile)
+        reader.onload = async function () {
+          const textContent = reader.result
+          console.log("the uploaded file length is: ", content.length)
+          await postUserFragments(user, fragmentType.options[fragmentType.selectedIndex].value, textContent)
+        }
+      }
+    }
+    else {
+      //console.log(fragmentType.options[fragmentType.selectedIndex].value)
+      if(fragmentType.options[fragmentType.selectedIndex].value == "text/plain" ||
+      fragmentType.options[fragmentType.selectedIndex].value == "text/markdown" ||
+      fragmentType.options[fragmentType.selectedIndex].value == "text/html" ||
+      fragmentType.options[fragmentType.selectedIndex].value == "application/json") {
+        postUserFragments(user, postInput.value, fragmentType.options[fragmentType.selectedIndex].value);
+      }
     }
   }
+  
   getAllFragments.onclick = async () => {
     console.log(postInput.value)
     var data = await getUserFragments(user)
@@ -47,11 +96,34 @@ async function init() {
     allFragments.innerHTML = formattedIds 
     console.log('formatted ids:', formattedIds)
   }
+
+  getAllFragmentsIdWithMetadataBtn.onclick = async () => {
+    console.log(postInput.value)
+    var data = await getUserFragmentsMetadata(user)
+    console.log('data: ' , data) 
+
+    var parsedData = JSON.parse(data).fragments;
+
+    var tableHTML = '<table>';
+    tableHTML += '<tr><th>id</th><th>ownerID</th><th>created</th><th>updated</th><th>type</th><th>size</th></tr>';
+
+    parsedData.forEach(fragment => {
+      tableHTML += `<tr><td>${fragment.id}</td><td>${fragment.ownerId}</td><td>${fragment.created}</td><td>${fragment.updated}</td><td>${fragment.type}</td><td>${fragment.size}</td></tr>`;
+    });
+
+    tableHTML += '</table>';
+    document.getElementById('allFragmentsIdWithMetadata').innerHTML = tableHTML;
+  }
+
   getFragment.onclick = async () => {
     console.log(idInput.value)
     var data = await getUserFragmentsWithId(idInput.value, user)
-    console.log('data with Id: ' , data) 
-    fragmentWithId.innerHTML = data 
+    if(data == undefined) {
+      data = "<i><strong>Error! Fragment with the given ID does not exist!</strong></i>"
+    } else {
+      console.log('data with Id: ' , data) 
+    }
+    fragmentWithId.innerHTML = "<b>Content:</b> " + data + "<br><b>Length:</b> " + data.length + "<br><b>Type:</b> "; 
   }
 
   // See if we're signed in (i.e., we'll have a `user` object)
@@ -77,6 +149,17 @@ async function init() {
 
   // Disable the Login button
   loginBtn.disabled = true;
+
+  //update the fragment 
+  updateFragmentBtn.onclick = async () => {
+    updateFragment(user, updateInputID.value, fragmentType.options[fragmentType.selectedIndex].value, updateInputData.value)
+  }
+  
+  //delete the fragment 
+  deleteFragmentBtn.onclick = () => {
+    deleteFragment(user, deleteInputID.value)
+  }
+  
 }
 
 // Wait for the DOM to be ready, then start the app

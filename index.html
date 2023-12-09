@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>Fragments UI</title>
     <link rel="stylesheet" href="https://unpkg.com/bamboo.css" />
-    <script type="module" src="src/app.js"></script>
+        <script type="module" src="src/app.js"></script>
   </head>
   <body>
     <h1>Fragments UI</h1>
@@ -14,47 +14,101 @@
     <section hidden id="user">
       <h2>Hello <span class="username"></span>!</h2>
 
+       <!--################################## Post Fragments Here: ##################################-->
+      <h2><u><i>Post your Fragment here:</i></u></h2>
+
       <h4>Select the type of the Fragment:</h4>
-      <select name="type" id="type">
+      <select name="type" id="selectionType">
         <option value="text/plain">text/plain</option>
         <option value="text/html">text/html</option>
         <option value="text/markdown">text/markdown</option>
         <option value="application/json">application/json</option>
+        <option value="image/png">image/png</option>
+        <option value="image/jpeg">image/jpeg</option>
+        <option value="image/webp">image/webp</option>
+        <option value="image/gif">image/gif</option>
       </select>
 
       <h4>Post the Fragment Data Here:</h4>
       <input type="text" id="postInput">
-      <br><br>
+      <br>
+      <br>
+      <label for="file" id="fileLbl" name="fileLbl">Upload a Small Fragment File</label>
+      <input type="file" id="file" name="file" /> 
+      <br>
+      <br>
       <button id="post">Post</button>
       <br>
       <br>
 
-      <h4>Get All Fragments</h4>
+      <!--################################## Get Fragments Here: ##################################-->
+      <h2><u><i>Get Fragments Here:</i></u></h2>
+
+      <!--GET /fragments  - returns the ids-->
+      <h4>Get All Fragments' ID:</h4>
       <button id="getAllFragments">Get</button>
       <br>
       <br>
       <div id="allFragments"></div>
 
-      <h4>Get Fragment with ID</h4>
+      <!--	GET /fragments/?expand=1 route - gets id with metadata-->
+      <!--need to implement-->
+      <h4>Get All Fragments' ID with Metadata:</h4>
+      <button id="getAllFragmentsIdWithMetadataBtn">Get</button>
+      <br>
+      <br>
+      <div id="allFragmentsIdWithMetadata"></div>
+
+      <!-- 	GET /fragments/:id returns an existing fragment. - missing Type and Length -->
+      <!--missing type and length -->
+      <h4>Get Fragment with ID:</h4>
       <input type="text" id="idInput">
       <br>
       <br>
-      <button id="getFragment">Get Fragment</button>
+      <button id="getFragmentBtn">Get Fragment with ID</button>
       <br>
       <br>
       <div id="fragmentWithId"></div>
+      <br>
+      <!-- 		GET /fragments/:id/info returns an existing fragment's metadata -->
+      <button id="getFragmentIDInfoBtn">Get Fragment with ID Info</button>
+      <br>
+      <br>
+      <div id="fragmentWithIdInfoDiv">
 
-      <h4>Get Fragment Metadata with ID</h4>
-      <input type="text" id="idInput">
+      </div>
       <br>
+      <!-- 	GET /fragments/:id.ext returns an existing fragment's data converted to a supported type -->
+      <button id="getFragmentConvertedBtn">Get Fragment Converted</button>
       <br>
-      <button id="getFragmentMetadata">Get Fragment Metadata</button>
+      <div id="fragmentWithConvertedDiv"></div>
       <br>
-      <br>
-      <div id="fragmentMetadataWithId"></div>
 
+      <!--################################## Update Fragment Here: ##################################-->
+      <h2><u><i>Update a Fragment here:</i></u></h2>
+      <h4>Please enter fragment ID:</h4>
+      <input type="text" id="updateInputID">
+      <br>
+      <h4>Please Enter New Data:</h4>
+      <input type="text" id="updateInputData">
       <br>
       <br>
+      <button id="updateFragmentBtn">Update Fragment</button>
+      <br>
+      <br>
+
+
+      <!--################################## Delete Fragment Here: ##################################-->
+      <h2><u><i>Delete a Fragment here:</i></u></h2>
+      <h4>Please enter fragment ID:</h4>
+      <input type="text" id="deleteInputID">
+      <br>
+      <br>
+      <button id="deleteFragmentBtn">Delete Fragment</button>
+      <br>
+      <br>
+
+      
     </section>
   </body>
 </html>

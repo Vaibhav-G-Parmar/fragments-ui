@@ -71,7 +71,30 @@ export async function postUserFragments(user, postInput, fType) {
     //console.log('Got authorization header', authorizationHeaders.Authorization )
     //await getUserFragmentsWithId(data.fragment.id, user)
   } catch (err) {
-    console.error('Unable to POST GET /v1/fragment', { err })
+    console.error('Unable to POST /v1/fragment', { err })
+  }
+}
+
+export async function getUserFragmentsMetadata(user) {
+  console.log('Requesting ALL user fragments metadata...');
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/?expand=1`, {
+      // Generate headers with the proper Authorization bearer token to pass
+      //headers: user.authorizationHeaders('text/plain'),
+      headers: {
+        Authorization: `Bearer ${user.idToken}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    //const data = await res.json();
+    const data = await res.text();
+    console.log('Got all user fragment metadata:', { data });
+    console.log('Got all user fragment metadata with.');
+    return data
+  } catch (err) {
+    console.error(`Unable to call GET /v1/fragment/?expand=1`, err);
   }
 }
 
@@ -95,5 +118,51 @@ export async function getUserFragmentMetadataWithId(id, user) {
     return data
   } catch (err) {
     console.error(`Unable to call GET /v1/fragment/${id}/info`, err);
+  }
+}
+
+/** Update fragment function **/
+export async function updateFragment(user, id, type, content) {
+  console.log("Updating user fragments data...");
+  try {
+    console.log(type);
+    console.log(content);
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${user.idToken}`,
+        "Content-Type": `${type}`,
+      },
+      body: `${content}`,
+    });
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    console.log("Put user fragments data", { data });
+    return data;
+  } catch (err) {
+    console.error("Unable to call PUT /v1/fragment", { err });
+  }
+}
+
+/** Delete fragment function **/
+export async function deleteFragment(user, id) {
+  console.log('Deleting user fragments data...');
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
+      method: "DELETE",
+      // Generate headers with the proper Authorization bearer token to pass
+      headers: {
+        'Authorization': `Bearer ${user.idToken}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    return data
+  } catch (err) {
+    console.error('Unable to call DELETE /v1/fragment', { err });
   }
 }
