@@ -1,7 +1,7 @@
 // src/app.js
 
 import { Auth, getUser } from './auth';
-import { getUserFragments, getUserFragmentsWithId, getUserFragmentsMetadata, getUserFragmentMetadataWithId, postUserFragments, updateFragment, deleteFragment } from './api';
+import { getUserFragments, getUserFragmentsWithId, getUserFragmentsMetadata, getUserFragmentMetadataWithId, postUserFragments, updateFragment, deleteFragment, convertFragment } from './api';
 
 async function init() {
   // Get our UI elements
@@ -26,6 +26,8 @@ async function init() {
   const updateFragmentBtn = document.querySelector("#updateFragmentBtn");
   const deleteInputID = document.querySelector("#deleteInputID");
   const deleteFragmentBtn = document.querySelector("#deleteFragmentBtn");
+  const getFragmentConvertedBtn = document.querySelector("#getFragmentConvertedBtn");
+  const convertedFragmentDiv = document.querySelector("#convertedFragmentDiv");
  
  // Dynamically create and append the style element for table styling
  const styleElement = document.createElement('style');
@@ -184,6 +186,10 @@ async function init() {
     deleteFragment(user, deleteInputID.value)
   }
   
+  getFragmentConvertedBtn.onclick = () => {
+    convertFragment(user, convertIdInput.value)
+  }
+
 }
 
 // Wait for the DOM to be ready, then start the app

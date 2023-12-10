@@ -169,11 +169,10 @@ export async function deleteFragment(user, id) {
 }
 
 /** Convert fragment function **/
-export async function convertFragment(user, id, data, type) {
-  console.log('Deleting user fragments data...');
+export async function convertFragment(user, id) {
+  console.log('Converting user fragments data...');
   try {
-    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
-      method: "DELETE",
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}.html`, {
       // Generate headers with the proper Authorization bearer token to pass
       headers: {
         'Authorization': `Bearer ${user.idToken}`,
@@ -185,6 +184,6 @@ export async function convertFragment(user, id, data, type) {
     const data = await res.json();
     return data
   } catch (err) {
-    console.error('Unable to call DELETE /v1/fragment', { err });
+    console.error('Unable to call Convert /v1/fragment', { err });
   }
 }
